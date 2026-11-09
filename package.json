@@ -1,0 +1,28 @@
+{
+  "name": "promql-claude-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that helps write PromQL in the Prometheus UI using Claude",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "bridge:install": "node bridge/install.mjs",
+    "bridge:uninstall": "node bridge/install.mjs --uninstall",
+    "test:e2e": "npm run build && node tests/e2e.mjs",
+    "test:live": "npm run build && node tests/e2e-live-claude-code.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.7",
+    "@types/node": "^26.6.6",
+    "esbuild": "^0.28.2",
+    "playwright": "^1.65.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

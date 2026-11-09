@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "PromQL AI Assistant",
+  "version": "0.1.0",
+  "description": "Ask AI to write, fix and explain PromQL right inside the Prometheus UI. Powered by devoriales.com.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxY7QmW1CJaRmyLzPWkkgeyvdApP8cd4JRao8IRZ6v2oX7nPDDrmxtX77p5WKSokTNrPmGZWCHDtOZHwFB1BEUeWjFGzbOJyqJekebjmft0nXOuj2OQ/66yx7dt3xBifd9t366h8GI63ZXT6ZkXSo4Coi46E+9WCmD++lac1BDKraBPU/6Ey/EP8JgD3SYIwsXyuRsHFQmRnijvCGhwTh5DIyHGKDidlILGBPWafAI3VUhVoglziPDxE8PFzYs2k10WAG2hBUf550mnIVxWox0QPOrJBW1X9xRGw/YWYlOfYSSKWhmX9oMIQcaA5O8jDbWfoetWydf9aWofJfeloaiwIDAQAB",
+  "minimum_chrome_version": "116",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "PromQL AI Assistant",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "storage",
+    "scripting",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "https://api.anthropic.com/*"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+P"
+      },
+      "description": "Toggle the PromQL AI Assistant"
+    }
+  },
+  "homepage_url": "https://devoriales.com",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
