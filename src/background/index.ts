@@ -15,7 +15,20 @@ chrome.runtime.onConnect.addListener((port) => {
  * host the user has granted. Hosts are user-configured, so registration is
  * dynamic instead of static manifest matches.
  */
-async function syncContentScripts(): Promise<void> {
+let syncQueue: Promise<void> = Promise.resolve();
+
+/**
+ * Saving settings fires several triggers at once (permission granted, storage
+ * changed, explicit request). Run syncs one after another; concurrent
+ * unregister/register calls fail with "Duplicate script ID".
+ */
+function syncContentScripts(): Promise<void> {
+  const run = syncQueue.then(doSyncContentScripts);
+  syncQueue = run.catch((err) => console.warn("PromQL AI: content script sync failed:", err));
+  return run;
+}
+
+async function doSyncContentScripts(): Promise<void> {
   const settings = await loadSettings();
   const patterns = [...new Set(settings.instances.map((i) => safe(() => matchPatternFor(i.baseUrl))).filter(Boolean))] as string[];
   const granted: string[] = [];
@@ -38,12 +51,12 @@ function safe<T>(fn: () => T): T | undefined {
   }
 }
 
-chrome.runtime.onInstalled.addListener(() => void syncContentScripts());
-chrome.runtime.onStartup.addListener(() => void syncContentScripts());
-chrome.permissions.onAdded.addListener(() => void syncContentScripts());
-chrome.permissions.onRemoved.addListener(() => void syncContentScripts());
+chrome.runtime.onInstalled.addListener(() => void syncContentScripts().catch(() => {}));
+chrome.runtime.onStartup.addListener(() => void syncContentScripts().catch(() => {}));
+chrome.permissions.onAdded.addListener(() => void syncContentScripts().catch(() => {}));
+chrome.permissions.onRemoved.addListener(() => void syncContentScripts().catch(() => {}));
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync" && changes.settings) void syncContentScripts();
+  if (area === "sync" && changes.settings) void syncContentScripts().catch(() => {});
 });
 
 /** Toolbar button: toggle the panel on a configured Prometheus page, otherwise offer to add the site. */
